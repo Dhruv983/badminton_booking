@@ -1,0 +1,223 @@
+/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Court Booking Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            padding-top: 20px;
+            background-color: #f8f9fa;
+        }
+        .countdown {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+        }
+        .next-booking-time {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .booking-history {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .nav-pills .nav-link.active {
+            background-color: #0d6efd;
+        }
+        .config-editor {
+            font-family: monospace;
+            min-height: 400px;
+        }
+        .status-success {
+            color: #198754;
+        }
+        .status-failure {
+            color: #dc3545;
+        }
+        .time-badge {
+            background-color: #6c757d;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h1>Court Booking Dashboard</h1>
+                        <p class="lead mb-0">Automated booking system for NL Field House Courts</p>
+                        <div class="countdown mt-2" id="nextRunCountdown"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-6 mb-3 mb-md-0">
+                <div class="card h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Next Bookings</h5>
+                        <span class="badge bg-primary" id="nextBookingDate">Loading...</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i> 
+                            The system will attempt to book courts <strong>exactly at 12:00:30 AM</strong> for dates 6 days from now.
+                        </div>
+                        <div id="nextBookingsList" class="list-group">
+                            <div class="text-center py-4">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p class="mt-2">Loading booking information...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="mb-0">Latest Results</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="latestResultsContainer" class="booking-history">
+                            <div class="text-center py-4">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p class="mt-2">Loading results...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <ul class="nav nav-pills card-header-pills" id="configTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="config-tab" data-bs-toggle="tab" data-bs-target="#config" type="button" role="tab" aria-controls="config" aria-selected="true">Configuration</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab" aria-controls="history" aria-selected="false">History</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="help-tab" data-bs-toggle="tab" data-bs-target="#help" type="button" role="tab" aria-controls="help" aria-selected="false">Help</button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content" id="configTabsContent">
+                            <div class="tab-pane fade show active" id="config" role="tabpanel" aria-labelledby="config-tab">
+                                <div class="alert alert-warning">
+                                    <i class="bi bi-exclamation-triangle"></i>
+                                    <strong>Important:</strong> To make changes to the configuration, update the <code>config.ini</code> file in your repository!
+                                </div>
+                                <p>Current configuration:</p>
+                                <pre id="configDisplay" class="p-3 bg-light rounded config-editor">Loading configuration...</pre>
+                            </div>
+                            <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
+                                <h4>Booking History</h4>
+                                <div id="historyList" class="list-group booking-history">
+                                    <div class="text-center py-4">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                        <p class="mt-2">Loading history...</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="help" role="tabpanel" aria-labelledby="help-tab">
+                                <h4>How to Use This System</h4>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h5><i class="bi bi-1-circle"></i> Configuration</h5>
+                                                <p>The system reads configuration from <code>config.ini</code> in your repository. Each user should have two sections:</p>
+                                                <pre class="bg-light p-2 rounded">
+[USER1_LOGIN]
+url = https://example.com/login
+username = your_username
+password = your_password
+
+[USER1_BOOKING]
+time = 7:00pm
+facility = badminton
+cell_number = 1234567890
+booking_reason = Regular game
+</pre>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h5><i class="bi bi-2-circle"></i> Scheduling</h5>
+                                                <p>The booking system runs automatically at <strong>12:00:30 AM Newfoundland time</strong> every day.</p>
+                                                <ul>
+                                                    <li>Each booking attempt is for <strong>6 days in the future</strong> from the current date</li>
+                                                    <li>The system runs in parallel for all users</li>
+                                                    <li>Results are recorded and displayed on this dashboard</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h5><i class="bi bi-3-circle"></i> Troubleshooting</h5>
+                                                <ul>
+                                                    <li>Check the <strong>Latest Results</strong> section for booking status</li>
+                                                    <li>Detailed logs are available in the GitHub repository under <code>docs/results/</code></li>
+                                                    <li>If bookings fail consistently, check your login credentials and facility availability</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h5><i class="bi bi-4-circle"></i> Manual Trigger</h5>
+                                                <p>You can manually trigger the booking process through GitHub Actions:</p>
+                                                <ol>
+                                                    <li>Go to your repository</li>
+                                                    <li>Click on "Actions"</li>
+                                                    <li>Select "Daily Court Booking"</li>
+                                                    <li>Click "Run workflow"</li>
+                                                </ol>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-4 text-center text-muted">
+            <p>Court Booking System © 2025</p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

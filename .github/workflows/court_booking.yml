@@ -1,0 +1,143 @@
+name: Daily Court Booking
+
+on:
+  schedule:
+    # Run at 12:00:30 AM Newfoundland time (UTC-3:30)
+    # In UTC: 3:30:30 AM
+    - cron: '30 3 * * *'
+  workflow_dispatch:  # For manual testing
+
+jobs:
+  book-courts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install selenium webdriver-manager pytz
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@latest
+        with:
+          chrome-version: stable
+
+      - name: Wait for precise time - 12:00:30 AM Newfoundland time
+        run: |
+          # Script to wait until exactly 30 seconds past the minute
+          python - <<EOF
+          import time
+          import datetime
+          import pytz
+          
+          def wait_until_seconds(target_seconds=30):
+              """Wait until we reach the specified second of the current minute"""
+              now = datetime.datetime.now(pytz.timezone('America/St_Johns'))
+              current_seconds = now.second
+              
+              # If we've already passed our target seconds this minute, 
+              # we'll wait until the next minute
+              if current_seconds > target_seconds:
+                  seconds_to_wait = (60 - current_seconds) + target_seconds
+              else:
+                  seconds_to_wait = target_seconds - current_seconds
+                  
+              # Subtract microseconds to ensure we don't overshoot
+              wait_time = seconds_to_wait - (now.microsecond / 1_000_000)
+              
+              # Don't wait negative time
+              if wait_time > 0:
+                  print(f"Waiting {wait_time:.1f} seconds until exactly {target_seconds} seconds past the minute")
+                  time.sleep(wait_time)
+              
+              # Print the exact time we're starting
+              print(f"Starting at: {datetime.datetime.now(pytz.timezone('America/St_Johns')).strftime('%Y-%m-%d %H:%M:%S.%f')}")
+          
+          # For GitHub Actions, we're already scheduled at the right hour and minute
+          # Just wait for the exact 30 seconds past the minute
+          wait_until_seconds(30)
+          EOF
+
+      - name: Run court booking script
+        run: python multi_user_runner.py --headless --parallel
+        env:
+          TZ: America/St_Johns  # Set timezone for the script execution
+
+      - name: Archive booking results
+        if: always()  # Archive results even if booking fails
+        uses: actions/upload-artifact@v3
+        with:
+          name: booking-results-${{ github.run_id }}
+          path: |
+            results/
+            *.log
+            
+      - name: Update booking results in repository
+        if: always()
+        run: |
+          # Get the current date in YYYY-MM-DD format
+          DATE=$(date +%Y-%m-%d)
+          
+          # Create the results directory if it doesn't exist
+          mkdir -p docs/results
+          
+          # Copy logs and results to the docs directory
+          cp -f *.log docs/results/booking_log_${DATE}.log || true
+          
+          # Create a JSON summary of results
+          python - <<EOF
+          import json
+          import os
+          import datetime
+          
+          def parse_log_for_results(log_path):
+              results = {
+                  "date": datetime.datetime.now().strftime("%Y-%m-%d"),
+                  "timestamp": datetime.datetime.now().isoformat(),
+                  "users": {}
+              }
+              
+              if not os.path.exists(log_path):
+                  return results
+                  
+              with open(log_path, 'r') as f:
+                  for line in f:
+                      if "Booking successful for" in line:
+                          user_id = line.split("Booking successful for")[1].strip()
+                          results["users"][user_id] = {"success": True}
+                      elif "Booking failed for" in line:
+                          user_id = line.split("Booking failed for")[1].strip()
+                          results["users"][user_id] = {"success": False}
+              
+              return results
+              
+          # Parse results from log
+          results = parse_log_for_results("multi_user_booking.log")
+          
+          # Save to JSON file
+          with open("docs/results/results_${DATE}.json", 'w') as f:
+              json.dump(results, f, indent=2)
+          
+          # Update the latest.json file with the same content
+          with open("docs/results/latest.json", 'w') as f:
+              json.dump(results, f, indent=2)
+          EOF
+          
+          # Configure Git
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          # Add and commit the results
+          git add docs/results/
+          git commit -m "Update booking results for ${DATE}" || echo "No changes to commit"
+          git push
