@@ -1,0 +1,11 @@
+2025-03-08 23:10:24,913 - INFO - Starting multi-user booking process
+2025-03-08 23:10:24,914 - INFO - Found 2 users to process
+2025-03-08 23:10:24,914 - INFO - Running bookings in parallel with auto workers
+2025-03-08 23:10:24,914 - INFO - Starting booking process for USER1
+2025-03-08 23:10:24,914 - INFO - Starting booking process for USER2
+2025-03-08 23:10:37,768 - ERROR - Booking failed for USER1
+2025-03-08 23:10:38,511 - ERROR - Booking failed for USER2
+2025-03-08 23:10:38,514 - INFO - 
+--- Booking Summary ---
+2025-03-08 23:10:38,514 - INFO - USER1: FAILED
+2025-03-08 23:10:38,514 - INFO - USER2: FAILED

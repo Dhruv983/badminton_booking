@@ -1,0 +1,124 @@
+2025-03-08 23:10:24,956 - INFO - Date for USER2 set to 6 days from now: 2025-03-14
+2025-03-08 23:10:24,956 - INFO - Date for USER1 set to 6 days from now: 2025-03-14
+2025-03-08 23:10:24,956 - INFO - Date for USER2 set to 6 days from now: 2025-03-14
+2025-03-08 23:10:24,956 - INFO - Date for USER1 set to 6 days from now: 2025-03-14
+2025-03-08 23:10:24,956 - INFO - Configuration loaded successfully for USER2
+2025-03-08 23:10:24,956 - INFO - Configuration loaded successfully for USER2
+2025-03-08 23:10:24,956 - INFO - Configuration loaded successfully for USER1
+2025-03-08 23:10:24,956 - INFO - Configuration loaded successfully for USER1
+2025-03-08 23:10:29,569 - INFO - Navigating to https://nlworksweb.myvscloud.com/webtrac/web/login.html
+2025-03-08 23:10:29,569 - INFO - Navigating to https://nlworksweb.myvscloud.com/webtrac/web/login.html
+2025-03-08 23:10:29,617 - INFO - Navigating to https://nlworksweb.myvscloud.com/webtrac/web/login.html
+2025-03-08 23:10:29,617 - INFO - Navigating to https://nlworksweb.myvscloud.com/webtrac/web/login.html
+2025-03-08 23:10:33,504 - INFO - Attempting to log in
+2025-03-08 23:10:33,504 - INFO - Attempting to log in
+2025-03-08 23:10:33,639 - INFO - Attempting to log in
+2025-03-08 23:10:33,639 - INFO - Attempting to log in
+2025-03-08 23:10:35,683 - ERROR - Unexpected error during booking process: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=134.0.6998.35)
+Stacktrace:
+	GetHandleVerifier [0x00DACED3+25523]
+	(No symbol) [0x00D323B4]
+	(No symbol) [0x00C006E3]
+	(No symbol) [0x00BEFEC0]
+	(No symbol) [0x00C0DFDF]
+	(No symbol) [0x00C746EF]
+	(No symbol) [0x00C8EB89]
+	(No symbol) [0x00C6D5F6]
+	(No symbol) [0x00C3C55F]
+	(No symbol) [0x00C3D8A4]
+	GetHandleVerifier [0x010B2713+3193843]
+	GetHandleVerifier [0x010C69E9+3276489]
+	GetHandleVerifier [0x010C0F0C+3253228]
+	GetHandleVerifier [0x00E4B0C0+673184]
+	(No symbol) [0x00D3B43D]
+	(No symbol) [0x00D38568]
+	(No symbol) [0x00D38709]
+	(No symbol) [0x00D2AE90]
+	BaseThreadInitThunk [0x75BC5D49+25]
+	RtlInitializeExceptionChain [0x76FFCEBB+107]
+	RtlGetAppContainerNamedObjectPath [0x76FFCE41+561]
+
+2025-03-08 23:10:35,683 - ERROR - Unexpected error during booking process: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=134.0.6998.35)
+Stacktrace:
+	GetHandleVerifier [0x00DACED3+25523]
+	(No symbol) [0x00D323B4]
+	(No symbol) [0x00C006E3]
+	(No symbol) [0x00BEFEC0]
+	(No symbol) [0x00C0DFDF]
+	(No symbol) [0x00C746EF]
+	(No symbol) [0x00C8EB89]
+	(No symbol) [0x00C6D5F6]
+	(No symbol) [0x00C3C55F]
+	(No symbol) [0x00C3D8A4]
+	GetHandleVerifier [0x010B2713+3193843]
+	GetHandleVerifier [0x010C69E9+3276489]
+	GetHandleVerifier [0x010C0F0C+3253228]
+	GetHandleVerifier [0x00E4B0C0+673184]
+	(No symbol) [0x00D3B43D]
+	(No symbol) [0x00D38568]
+	(No symbol) [0x00D38709]
+	(No symbol) [0x00D2AE90]
+	BaseThreadInitThunk [0x75BC5D49+25]
+	RtlInitializeExceptionChain [0x76FFCEBB+107]
+	RtlGetAppContainerNamedObjectPath [0x76FFCE41+561]
+
+2025-03-08 23:10:35,684 - INFO - Closing browser
+2025-03-08 23:10:35,684 - INFO - Closing browser
+2025-03-08 23:10:36,421 - ERROR - Unexpected error during booking process: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=134.0.6998.35)
+Stacktrace:
+	GetHandleVerifier [0x00DACED3+25523]
+	(No symbol) [0x00D323B4]
+	(No symbol) [0x00C006E3]
+	(No symbol) [0x00BEFEC0]
+	(No symbol) [0x00C0DFDF]
+	(No symbol) [0x00C746EF]
+	(No symbol) [0x00C8EB89]
+	(No symbol) [0x00C6D5F6]
+	(No symbol) [0x00C3C55F]
+	(No symbol) [0x00C3D8A4]
+	GetHandleVerifier [0x010B2713+3193843]
+	GetHandleVerifier [0x010C69E9+3276489]
+	GetHandleVerifier [0x010C0F0C+3253228]
+	GetHandleVerifier [0x00E4B0C0+673184]
+	(No symbol) [0x00D3B43D]
+	(No symbol) [0x00D38568]
+	(No symbol) [0x00D38709]
+	(No symbol) [0x00D2AE90]
+	BaseThreadInitThunk [0x75BC5D49+25]
+	RtlInitializeExceptionChain [0x76FFCEBB+107]
+	RtlGetAppContainerNamedObjectPath [0x76FFCE41+561]
+
+2025-03-08 23:10:36,421 - ERROR - Unexpected error during booking process: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=134.0.6998.35)
+Stacktrace:
+	GetHandleVerifier [0x00DACED3+25523]
+	(No symbol) [0x00D323B4]
+	(No symbol) [0x00C006E3]
+	(No symbol) [0x00BEFEC0]
+	(No symbol) [0x00C0DFDF]
+	(No symbol) [0x00C746EF]
+	(No symbol) [0x00C8EB89]
+	(No symbol) [0x00C6D5F6]
+	(No symbol) [0x00C3C55F]
+	(No symbol) [0x00C3D8A4]
+	GetHandleVerifier [0x010B2713+3193843]
+	GetHandleVerifier [0x010C69E9+3276489]
+	GetHandleVerifier [0x010C0F0C+3253228]
+	GetHandleVerifier [0x00E4B0C0+673184]
+	(No symbol) [0x00D3B43D]
+	(No symbol) [0x00D38568]
+	(No symbol) [0x00D38709]
+	(No symbol) [0x00D2AE90]
+	BaseThreadInitThunk [0x75BC5D49+25]
+	RtlInitializeExceptionChain [0x76FFCEBB+107]
+	RtlGetAppContainerNamedObjectPath [0x76FFCE41+561]
+
+2025-03-08 23:10:36,422 - INFO - Closing browser
+2025-03-08 23:10:36,422 - INFO - Closing browser
