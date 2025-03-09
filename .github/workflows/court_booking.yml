@@ -105,7 +105,7 @@ jobs:
 
       - name: Archive booking results
         if: always()  # Archive results even if booking fails
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4  # Updated from v3 to v4
         with:
           name: booking-results-${{ github.run_id }}
           path: |
