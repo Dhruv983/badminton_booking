@@ -7,6 +7,9 @@ on:
     - cron: '30 3 * * *'
   workflow_dispatch:  # For manual testing
 
+permissions:
+  contents: write
+
 jobs:
   book-courts:
     runs-on: ubuntu-latest
@@ -24,7 +27,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install selenium webdriver-manager pytz
+          pip install selenium webdriver-manager pytz configparser
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
       - name: Install Chrome
@@ -32,7 +35,6 @@ jobs:
         with:
           chrome-version: stable
 
-      # ADD THIS NEW STEP TO CREATE CONFIG.INI
       - name: Create config.ini file
         run: |
           cat > config.ini << EOL
@@ -103,9 +105,15 @@ jobs:
         env:
           TZ: America/St_Johns  # Set timezone for the script execution
 
+      - name: Ensure results directory
+        run: mkdir -p results
+        
+      - name: Ensure log file exists
+        run: touch multi_user_booking.log
+
       - name: Archive booking results
         if: always()  # Archive results even if booking fails
-        uses: actions/upload-artifact@v4  # Updated from v3 to v4
+        uses: actions/upload-artifact@v4
         with:
           name: booking-results-${{ github.run_id }}
           path: |
