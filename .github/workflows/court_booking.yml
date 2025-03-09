@@ -97,3 +97,77 @@ jobs:
           # Just wait for the exact 30 seconds past the minute
           wait_until_seconds(30)
           EOF
+
+      - name: Run court booking script
+        run: python multi_user_runner.py --headless --parallel
+        env:
+          TZ: America/St_Johns  # Set timezone for the script execution
+
+      - name: Archive booking results
+        if: always()  # Archive results even if booking fails
+        uses: actions/upload-artifact@v3
+        with:
+          name: booking-results-${{ github.run_id }}
+          path: |
+            results/
+            *.log
+            
+      - name: Update booking results in repository
+        if: always()
+        run: |
+          # Get the current date in YYYY-MM-DD format
+          DATE=$(date +%Y-%m-%d)
+          
+          # Create the results directory if it doesn't exist
+          mkdir -p docs/results
+          
+          # Copy logs and results to the docs directory
+          cp -f *.log docs/results/booking_log_${DATE}.log || true
+          
+          # Create a JSON summary of results
+          python - <<EOF
+          import json
+          import os
+          import datetime
+          
+          def parse_log_for_results(log_path):
+              results = {
+                  "date": datetime.datetime.now().strftime("%Y-%m-%d"),
+                  "timestamp": datetime.datetime.now().isoformat(),
+                  "users": {}
+              }
+              
+              if not os.path.exists(log_path):
+                  return results
+                  
+              with open(log_path, 'r') as f:
+                  for line in f:
+                      if "Booking successful for" in line:
+                          user_id = line.split("Booking successful for")[1].strip()
+                          results["users"][user_id] = {"success": True}
+                      elif "Booking failed for" in line:
+                          user_id = line.split("Booking failed for")[1].strip()
+                          results["users"][user_id] = {"success": False}
+              
+              return results
+              
+          # Parse results from log
+          results = parse_log_for_results("multi_user_booking.log")
+          
+          # Save to JSON file
+          with open("docs/results/results_${DATE}.json", 'w') as f:
+              json.dump(results, f, indent=2)
+          
+          # Update the latest.json file with the same content
+          with open("docs/results/latest.json", 'w') as f:
+              json.dump(results, f, indent=2)
+          EOF
+          
+          # Configure Git
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          # Add and commit the results
+          git add docs/results/
+          git commit -m "Update booking results for ${DATE}" || echo "No changes to commit"
+          git push
