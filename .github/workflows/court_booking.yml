@@ -101,7 +101,7 @@ jobs:
           EOF
 
       - name: Run court booking script
-        run: python multi_user_runner.py --headless --parallel
+        run: python multi_user_runner.py --headless
         env:
           TZ: America/St_Johns  # Set timezone for the script execution
 
