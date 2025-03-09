@@ -1,7 +1,10 @@
 {
   "date": "2025-03-09",
-  "timestamp": "2025-03-09T02:38:47.938711",
+  "timestamp": "2025-03-09T02:57:31.367793",
   "users": {
+    "USER1": {
+      "success": false
+    },
     "USER2": {
       "success": false
     }
