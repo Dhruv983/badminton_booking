@@ -30,10 +30,38 @@ jobs:
           pip install selenium webdriver-manager pytz configparser
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      - name: Install Chrome
-        uses: browser-actions/setup-chrome@latest
-        with:
-          chrome-version: stable
+      - name: Install Chrome and WebDriver
+        run: |
+          # Install Chrome
+          wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+          echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+          sudo apt-get update
+          sudo apt-get -y install google-chrome-stable
+          
+          # Print Chrome version for debugging
+          google-chrome --version
+          
+          # No need to install ChromeDriver separately - webdriver-manager will handle it
+
+      - name: Debug environment
+        run: |
+          echo "Chrome version:"
+          google-chrome --version
+          
+          echo "Python version:"
+          python --version
+          
+          echo "Display server availability:"
+          echo $DISPLAY
+          
+          echo "Python path:"
+          which python
+          
+          echo "Working directory:"
+          pwd
+          
+          echo "Directory contents:"
+          ls -la
 
       - name: Create config.ini file
         run: |
@@ -79,7 +107,7 @@ jobs:
               
               # If we've already passed our target seconds this minute, 
               # we'll wait until the next minute
-              if current_seconds > target_seconds:
+              if (current_seconds > target_seconds):
                   seconds_to_wait = (60 - current_seconds) + target_seconds
               else:
                   seconds_to_wait = target_seconds - current_seconds
@@ -88,7 +116,7 @@ jobs:
               wait_time = seconds_to_wait - (now.microsecond / 1_000_000)
               
               # Don't wait negative time
-              if wait_time > 0:
+              if (wait_time > 0):
                   print(f"Waiting {wait_time:.1f} seconds until exactly {target_seconds} seconds past the minute")
                   time.sleep(wait_time)
               

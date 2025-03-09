@@ -24,6 +24,23 @@ class MultiUserBooker:
         # Create results directory
         self.results_dir = "results"
         os.makedirs(self.results_dir, exist_ok=True)
+
+    def create_chrome_options(headless=True):
+        chrome_options = webdriver.ChromeOptions()
+        if headless:
+            chrome_options.add_argument('--headless')
+        
+        # Required options for running in GitHub Actions
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--disable-dev-shm-usage')
+        chrome_options.add_argument('--disable-gpu')
+        chrome_options.add_argument('--window-size=1920,1080')
+        chrome_options.add_argument('--disable-extensions')
+        chrome_options.add_argument('--proxy-server="direct://"')
+        chrome_options.add_argument('--proxy-bypass-list=*')
+        chrome_options.add_argument('--start-maximized')
+        
+        return chrome_options
         
     def _setup_logging(self):
         """Set up multi-user booking logger"""
